@@ -8,7 +8,7 @@ this is a place where I store my exercises for AI Devs course. The course is abo
 ## Get repository
 git pull https://github.com/bartwisniewski/aidevs
 
-##Create Virtual Environment
+reate Virtual Environment
 cd ai-devs
 python3 -m venv ./env
 
@@ -24,3 +24,6 @@ pip install -r requirements.txt
 ##Prepare your environment variables (API KEYS)
 cp source/general/.env_example /source/general/.env
 open .env and input your private API KEYs
+
+
+##

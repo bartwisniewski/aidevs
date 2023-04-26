@@ -1,9 +1,11 @@
 from general.exercise import exercise
+from openai.moderation import check
 
 
-@exercise("helloapi")
+@exercise("moderation")
 def solve(data):
-    answer = data.get("cookie")
+    input_ = data.get("input")
+    answer = check(input_)
     return answer
 
 

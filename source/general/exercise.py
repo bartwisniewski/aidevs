@@ -1,11 +1,8 @@
-import os
+
 import requests
 import json
 from requests.exceptions import ConnectionError
-from general.constants import SERVER
-from dotenv import load_dotenv
-
-load_dotenv()
+from general.constants import SERVER, API_KEY
 
 
 class Exercise:
@@ -20,9 +17,10 @@ class Exercise:
 
     def authorize(self):
         url = f"{SERVER}/{Exercise.AUTH}/{self.task_name}"
-        payload = {"apikey": os.getenv("API_KEY")}
+        headers = {'Content-Type': 'application/json; charset=utf-8'}
+        payload = {"apikey": API_KEY}
         try:
-            r = requests.post(url, data=json.dumps(payload))
+            r = requests.post(url, headers=headers, json=payload)
         except ConnectionError:
             print("problem with connection (wrong server name?)")
             return None
@@ -72,9 +70,10 @@ class Exercise:
     def send_answer(self, answer):
         if not self.token:
             return None
+        headers = {'Content-Type': 'application/json; charset=utf-8'}
         url = f"{SERVER}/{Exercise.ANSWER}/{self.token}"
         payload = {"answer": answer}
-        r = requests.post(url, data=json.dumps(payload))
+        r = requests.post(url, headers=headers, json=payload)
         result = r.json()
         return result
 
@@ -88,7 +87,7 @@ def exercise(task_name):
         def wrapper(*args, **kwargs):
             if not task_name:
                 return None
-            exercise_obj = Exercise("helloapi")
+            exercise_obj = Exercise(task_name)
             kwargs["data"] = exercise_obj.get_task_data()
             if not exercise_obj.token:
                 return None

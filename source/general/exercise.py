@@ -1,38 +1,54 @@
 import os
 import requests
 import json
-
+from requests.exceptions import ConnectionError
 from general.constants import SERVER
-
 from dotenv import load_dotenv
 
 load_dotenv()
 
 
 class Exercise:
+    AUTH = "token"
+    GET = "task"
+    ANSWER = "answer"
+
     def __init__(self, task_name):
         self.task_name = task_name
         self.token = None
         self.exercise_data = None
 
     def authorize(self):
-        url = f"{SERVER}/token/{self.task_name}"
-        payload = {'apikey': os.getenv('API_KEY')}
-        r = requests.post(url, data=json.dumps(payload))
+        url = f"{SERVER}/{Exercise.AUTH}/{self.task_name}"
+        payload = {"apikey": os.getenv("API_KEY")}
+        try:
+            r = requests.post(url, data=json.dumps(payload))
+        except ConnectionError:
+            print("problem with connection (wrong server name?)")
+            return None
         if r.status_code != 200:
-            print("problem with authorization")
+            print("problem with authorization wrong API")
             return None
         data = r.json()
-        self.token = data.get('token')
-        return True
+        self.token = data.get("token")
+        if not self.token:
+            print("no token in authorization response")
+            return None
+        return self.token
 
     def get_exercise(self):
         if not self.token:
             print("you are not authorized")
             return None
-        url = f"{SERVER}/task/{self.token}"
+        url = f"{SERVER}/{Exercise.GET}/{self.token}"
         r = requests.get(url)
+        if r.status_code != 200:
+            print(f"problem with getting exercise: {r.json().get('msg')}")
+            return None
         self.exercise_data = r.json()
+        if self.exercise_data.get("code") != 0:
+            print("wrong return code")
+            return None
         return self.exercise_data
 
     def print_task(self):
@@ -42,6 +58,10 @@ class Exercise:
         self.get_exercise()
         if self.exercise_data:
             print(f"task: {self.exercise_data.get('msg', 'no task')}")
+            pure_data = self.exercise_data.copy()
+            pure_data.pop("code")
+            pure_data.pop("msg")
+            print(f"data: {pure_data}")
 
     def get_task_data(self):
         authorised = self.authorize()
@@ -52,16 +72,18 @@ class Exercise:
     def send_answer(self, answer):
         if not self.token:
             return None
-        url = f"{SERVER}/answer/{self.token}"
-        payload = {'answer': answer}
+        url = f"{SERVER}/{Exercise.ANSWER}/{self.token}"
+        payload = {"answer": answer}
         r = requests.post(url, data=json.dumps(payload))
         result = r.json()
         return result
 
 
 def exercise(task_name):
-    """ Authenticates on AI Devs, gets exercise input data and returns answer as JSON.
-    Decorated functions should accept "data": Dict as an argument and should return answer object"""
+    """Authenticates on AI Devs, gets exercise input data and returns answer as JSON.
+    Decorated functions should accept "data": Dict as an argument and should return answer object
+    """
+
     def inner(func):
         def wrapper(*args, **kwargs):
             if not task_name:
@@ -75,11 +97,7 @@ def exercise(task_name):
                 print(f"answer: {answer}")
                 result = exercise_obj.send_answer(answer)
                 print(f"result: {result.get('note', 'error')}")
+
         return wrapper
+
     return inner
-
-
-def print_task(task_name):
-    """ Authenticates on AI Devs, and prints exercise description"""
-    exercise_obj = Exercise(task_name)
-    exercise_obj.print_task()

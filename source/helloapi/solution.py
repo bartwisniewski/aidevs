@@ -1,4 +1,3 @@
-from general.exercise import print_task
 from general.exercise import exercise
 
 
@@ -9,6 +8,4 @@ def solve(data):
 
 
 if __name__ == "__main__":
-    print_task("helloapi")
     solve()
-

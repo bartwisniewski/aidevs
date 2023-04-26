@@ -5,22 +5,27 @@ this is a place where I store my exercises for AI Devs course. The course is abo
 
 # How to run:
 
-## Get repository
+- Get repository
+```
 git pull https://github.com/bartwisniewski/aidevs
-
-##Create Virtual Environment
+```
+- Create Virtual Environment
+```
 cd ai-devs
 python3 -m venv ./env
+```
+- Activate Virtual Environment
+```
+source env/bin/activate (Windows: env\Scripts\activate.bat)
+```
 
-##Activate VEnv
-###Windows:
-env\Scripts\activate.bat
-###Unix, MacOS
-source env/bin/activate
-
-##Install dependencies
+- Install dependencies
+```
 pip install -r requirements.txt
+```
 
-##Prepare your environment variables (API KEYS)
-cp source/general/.env_example /source/general/.env
-open .env and input your private API KEYs
+- Prepare your environment variables (API KEYS)
+```
+cp source/general/.env_example source/general/.env (Windows: copy source\general\.env_example source\general\.env)
+```
+open /source/general/.env and input your private API KEYs

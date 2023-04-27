@@ -1,6 +1,5 @@
 from general.exercise import exercise
-from openai.moderation import check
-from openai.completion import send_prompt, single_entry_messages
+from myopenai.completion import chat_completion, format_messages
 
 
 def classify(info):
@@ -30,15 +29,11 @@ def solve(data):
     print(name)
     print(info)
     print(question)
-    user_text = f"{info}.{question} Odpowiedz po polsku tylko na to pytanie i nic więcej."
-    system_text = "User sends you data about a person and one question. Answer it using only words from question."
-    messages = single_entry_messages(user_text=user_text, system_text=system_text)
-    response = send_prompt(model="gpt-3.5-turbo", messages=messages)
-    choices = response.get("choices")[0]
-    message = choices.get("message")
-    content = message.get("content")
-    print(content)
-    answer = content
+    user_msg = f"{info}.{question} Odpowiedz po polsku tylko na to pytanie i nic więcej."
+    system_msg = "User sends you data about a person and one question. Answer it using only words from question."
+    messages = format_messages([('user', user_msg), ('system', system_msg)])
+    response = chat_completion(model="gpt-3.5-turbo", messages=messages)
+    answer = response
     return answer
 
 

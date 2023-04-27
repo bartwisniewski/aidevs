@@ -1,5 +1,5 @@
 from general.exercise import exercise
-from openai.moderation import check
+from myopenai.moderation import check
 
 
 @exercise("moderation")

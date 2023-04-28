@@ -95,7 +95,7 @@ def exercise(task_name):
             if answer:
                 print(f"answer: {answer}")
                 result = exercise_obj.send_answer(answer)
-                print(f"result: {result.get('note', 'error')}")
+                print(f"result: {result.get('note', result)}")
 
         return wrapper
 

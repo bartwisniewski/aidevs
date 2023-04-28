@@ -1,4 +1,3 @@
-
 import requests
 import json
 from requests.exceptions import ConnectionError
@@ -17,7 +16,7 @@ class Exercise:
 
     def authorize(self):
         url = f"{SERVER}/{Exercise.AUTH}/{self.task_name}"
-        headers = {'Content-Type': 'application/json; charset=utf-8'}
+        headers = {"Content-Type": "application/json; charset=utf-8"}
         payload = {"apikey": API_KEY}
         try:
             r = requests.post(url, headers=headers, json=payload)
@@ -70,7 +69,7 @@ class Exercise:
     def send_answer(self, answer):
         if not self.token:
             return None
-        headers = {'Content-Type': 'application/json; charset=utf-8'}
+        headers = {"Content-Type": "application/json; charset=utf-8"}
         url = f"{SERVER}/{Exercise.ANSWER}/{self.token}"
         payload = {"answer": answer}
         r = requests.post(url, headers=headers, json=payload)

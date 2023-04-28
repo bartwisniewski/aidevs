@@ -8,6 +8,5 @@ def format_messages(messages):
 
 def chat_completion(model, messages):
     openai.api_key = OPENAI_KEY
-    completion = openai.ChatCompletion.create(model=model,
-                                              messages=messages)
+    completion = openai.ChatCompletion.create(model=model, messages=messages)
     return completion.choices[0].message.content

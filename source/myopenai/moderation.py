@@ -8,8 +8,7 @@ def test_results(results):
 
 def check(tested_input):
     openai.api_key = OPENAI_KEY
-    moderation_resp = openai.Moderation.create(
-        input=tested_input)
+    moderation_resp = openai.Moderation.create(input=tested_input)
     results = moderation_resp.get("results")
     if not results:
         print(f"Wrong answer from Open AI")

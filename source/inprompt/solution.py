@@ -29,9 +29,11 @@ def solve(data):
     print(name)
     print(info)
     print(question)
-    user_msg = f"{info}.{question} Odpowiedz po polsku tylko na to pytanie i nic więcej."
+    user_msg = (
+        f"{info}.{question} Odpowiedz po polsku tylko na to pytanie i nic więcej."
+    )
     system_msg = "User sends you data about a person and one question. Answer it using only words from question."
-    messages = format_messages([('user', user_msg), ('system', system_msg)])
+    messages = format_messages([("user", user_msg), ("system", system_msg)])
     response = chat_completion(model="gpt-3.5-turbo", messages=messages)
     answer = response
     return answer
